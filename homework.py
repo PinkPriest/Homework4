@@ -21,6 +21,7 @@ class Student:
         CF = ", ".join(self.finished_courses)
         return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания:{average_grade(self.grades.values())}\nКурсы в процессе изучения: {CIP}\nЗавершенные курсы: {CF}"
 
+
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
@@ -31,10 +32,11 @@ class Mentor:
         # в класс "Lecturer", но тогда получится совсем непрактично. Если оставить словарь с оценками в дочернем классе "Lecturer", то словарь будет
         # одинаковым для всех объектов класса "Lecturer"
 
-class Lecturer(Mentor):
 
+class Lecturer(Mentor):
     def __str__(self):
         return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции:{average_grade(self.grades.values())}"
+
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
@@ -48,6 +50,7 @@ class Reviewer(Mentor):
 
     def __str__(self):
         return f"Имя: {self.name}\nФамилия: {self.surname}"
+
 
 def average_grade(grades):
     all_grades = []
@@ -71,6 +74,27 @@ def compare_lecturers(lecturer1, lecturer2):
         return f"У лектора \"{lecturer1.name} {lecturer1.surname}\" средний балл меньше, чем у лектора \"{lecturer2.name} {lecturer2.surname}\""
     else:
         return f"У лектора \"{lecturer1.name} {lecturer1.surname}\" средний балл такой же, как у лектора \"{lecturer2.name} {lecturer2.surname}\""
+
+def course_average_hw_grade(course_name, students):
+    course_grades_list = []
+    course_grade_list = []
+    for student in students:
+        course_grades_list.append(student.grades.get(course_name))
+    for lst in course_grades_list:
+        for el in lst:
+            course_grade_list.append(el)
+    return f"Средняя оценка домашних заданий на курсе \"{course_name}\" = {sum(course_grade_list)/len(course_grade_list)}"
+
+def course_average_lec_grade(course_name, lecturers):
+    course_grades_list = []
+    course_grade_list = []
+    for lecturer in lecturers:
+        course_grades_list.append(lecturer.grades.get(course_name))
+    for lst in course_grades_list:
+        for el in lst:
+            course_grade_list.append(el)
+    return f"Средняя оценка лекций на курсе \"{course_name}\" = {sum(course_grade_list)/len(course_grade_list)}"
+
 
 best_student = Student('Ruoy', 'Eman', 'male')
 best_student.courses_in_progress += ['Python']
@@ -114,9 +138,12 @@ best_student.rate_lecture(cool_lecturer, 'Python', 10)
 best_student.rate_lecture(cool_lecturer, 'Git', 9)
 best_student.rate_lecture(cool_lecturer, 'Введение в программирование', 10)
 
-bad_student.rate_lecture(bad_lecturer, 'Python', 1)
+bad_student.rate_lecture(bad_lecturer, 'Python', 2)
 bad_student.rate_lecture(bad_lecturer, 'Git', 3)
 bad_student.rate_lecture(bad_lecturer, 'Введение в программирование', 2)
+
+students_list = [best_student, bad_student]
+lecturer_list = [cool_lecturer, bad_lecturer]
 
 print(cool_reviewer)
 print(best_student)
@@ -125,9 +152,9 @@ print(compare_students(best_student, bad_student))
 print(cool_lecturer)
 print(bad_lecturer)
 print(compare_lecturers(cool_lecturer, bad_lecturer))
+print(course_average_hw_grade('Python', students_list))
+print(course_average_lec_grade('Git', lecturer_list))
 
-print(list(best_student.grades.values()))
-print(list(cool_lecturer.grades.values()))
-print(list(bad_student.grades.values()))
-print(list(bad_lecturer.grades.values()))
+
+
 
